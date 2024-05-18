@@ -1,7 +1,6 @@
 local Player = require("entities.player.player")
 local Enemey = require("entities.enemy.enemy")
 
-
 function love.load()
 
     player = Player:new({
@@ -28,6 +27,7 @@ function love.load()
 
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
+    love.graphics.setBackgroundColor(1,1,1)
 end
 
 function love.update( dt )
