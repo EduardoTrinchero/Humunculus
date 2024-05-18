@@ -6,7 +6,8 @@ origem = 56
 
 
 function love.load()
-    imagem = love.graphics.newImage ( "assets/images/sprt_marlon.png" )
+    marlonImg = love.graphics.newImage ( "assets/images/Denzel.png" )
+    marlonImg:setFilter("nearest", "nearest")
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
 end
@@ -39,6 +40,6 @@ end
 
 function love.draw ()
     rot = 0
-    love.graphics.draw( imagem, posX, posY, 0, 4)
+    love.graphics.draw( marlonImg, posX, posY, 0, 4)
     
 end
