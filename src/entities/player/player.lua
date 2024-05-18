@@ -3,7 +3,12 @@ local ImageManager = require "src.managers.image_manager.imageManager"
 Player = {
     health = 100,
     sprite = nil,
-    isLive = true
+    isLive = true,
+    posX = 0,
+    posY = 0,
+    angle = 0,
+    size = 1,
+    origin = 56
 }
     
 function Player:new (obj)
@@ -25,6 +30,24 @@ end
 
 function Player:kill ()
     self.isLive = false
+end
+
+function Player:checkMoves(dt)
+    if love.keyboard.isDown ("a") then
+        self.posX = self.posX - 300 * dt
+        
+    end
+    if love.keyboard.isDown ("d") then
+        self.posX = self.posX + 300 * dt
+    
+    end
+    if love.keyboard.isDown ("w") then
+       self.posY = self.posY - 300 * dt
+        
+    end
+    if love.keyboard.isDown ("s") then
+       self.posY = self.posY + 300 * dt
+    end
 end
 
 return Player
