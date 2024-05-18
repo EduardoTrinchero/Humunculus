@@ -1,23 +1,34 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
+local Hitbox = require "src.entities.hitbox.hitbox"
 
 Player = {
     health = 100,
     sprite = nil,
     isLive = true,
+    hitbox = nil,
+
     posX = 0,
     posY = 0,
     angle = 0,
     size = 1,
-    origin = 56
+    originOffsetX = 19,
+    originOffsetY = 19,
+    speed = 300
 }
     
 function Player:new (obj)
     obj = obj or {}
     setmetatable(obj, self)
     self.__index = self
+
     obj.sprite = ImageManager:new({
         path = obj.sprite
     }):getImage()
+
+    obj.hitbox = Hitbox:new({
+        radius = obj.hitbox
+    })
+
     return obj
 end
 
@@ -33,21 +44,28 @@ function Player:kill ()
 end
 
 function Player:checkMoves(dt)
-    if love.keyboard.isDown ("a") then
-        self.posX = self.posX - 300 * dt
-        
-    end
-    if love.keyboard.isDown ("d") then
-        self.posX = self.posX + 300 * dt
-    
-    end
-    if love.keyboard.isDown ("w") then
-       self.posY = self.posY - 300 * dt
-        
-    end
-    if love.keyboard.isDown ("s") then
-       self.posY = self.posY + 300 * dt
-    end
-end
+    local moveX, moveY = 0, 0
 
+    if love.keyboard.isDown("a") then
+        moveX = moveX - 1
+    end
+    if love.keyboard.isDown("d") then
+        moveX = moveX + 1
+    end
+    if love.keyboard.isDown("w") then
+        moveY = moveY - 1
+    end
+    if love.keyboard.isDown("s") then
+        moveY = moveY + 1
+    end
+
+    local length = math.sqrt(moveX^2 + moveY^2)
+    if length > 0 then
+        moveX = moveX / length
+        moveY = moveY / length
+    end
+
+    self.posX = self.posX + moveX * self.speed * dt
+    self.posY = self.posY + moveY * self.speed * dt
+end
 return Player
