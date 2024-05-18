@@ -1,3 +1,7 @@
+local Player = require("entities.player.player")
+local Enemey = require("entities.enemy.enemy")
+
+
 posX = 250
 posY = 250
 angulo = 0
@@ -6,8 +10,19 @@ origem = 56
 
 
 function love.load()
-    marlonImg = love.graphics.newImage ( "assets/images/Denzel.png" )
-    marlonImg:setFilter("nearest", "nearest")
+
+    player = Player:new({
+        health = 100,
+        sprite = "assets/images/Denzel.png",
+        isLive = true
+    })
+
+    enemy = Enemey:new({
+        health = 100,
+        sprite = "assets/images/pigtauro.png",
+        isLive = true
+    })
+
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
 end
@@ -39,7 +54,6 @@ function love.update( dt )
 end
 
 function love.draw ()
-    rot = 0
-    love.graphics.draw( marlonImg, posX, posY, 0, 4)
-    
+    love.graphics.draw( enemy.sprite, 10, 10, 0, 4)
+    love.graphics.draw( player.sprite, posX, posY, 0, 4)
 end
