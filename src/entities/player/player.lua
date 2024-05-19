@@ -1,9 +1,12 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
+local Hitbox = require "src.entities.hitbox.hitbox"
 
 Player = {
     health = 100,
     sprite = nil,
     isLive = true,
+    hitbox = nil,
+
     posX = 0,
     posY = 0,
     angle = 0,
@@ -17,9 +20,15 @@ function Player:new (obj)
     obj = obj or {}
     setmetatable(obj, self)
     self.__index = self
+
     obj.sprite = ImageManager:new({
         path = obj.sprite
     }):getImage()
+
+    obj.hitbox = Hitbox:new({
+        radius = obj.hitbox
+    })
+
     return obj
 end
 

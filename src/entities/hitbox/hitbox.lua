@@ -1,5 +1,5 @@
 Hitbox = {
-    radio = 0
+    radius = 0
 }
 
 
@@ -11,4 +11,14 @@ function Hitbox:new ( obj )
 end
 
 
+function Hitbox:hit(posX, posY, refX, refY)
+    local distance = math.sqrt((refX - posX)^2 + (refY - posY)^2)
+    if distance <= self.radius then
+        return true
+    else
+        return false 
+    end
+end
 
+
+return Hitbox

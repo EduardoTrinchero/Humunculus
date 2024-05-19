@@ -7,6 +7,7 @@ function love.load()
         health = 100,
         sprite = "assets/images/sprt_marlon_2.png",
         isLive = true,
+        hitbox = 65,
 
         posX = 250,
         posY = 250,
@@ -38,6 +39,12 @@ end
 function love.update( dt )
     player:checkMoves(dt)
     enemy:goForPlayer(dt, player)
+
+    if player.hitbox:hit(player.posX, player.posY, enemy.posX, enemy.posY) then 
+        love.graphics.setColor(255, 0, 0)
+    else
+        love.graphics.setColor(0, 255, 0)
+    end
 end
 
 function love.draw ()
