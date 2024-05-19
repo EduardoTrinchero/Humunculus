@@ -43,7 +43,7 @@ end
 function Vegadante:onDeath()
     if not self.isLive then
         self.sprite = ImageManager:new({
-            path = "assets/images/vegadante/vegadante_atk_a.png",
+            path = "assets/images/vegadante/vegadante_morto.png",
         }):getImage()
     end
 end
