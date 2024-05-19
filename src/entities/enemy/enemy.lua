@@ -52,7 +52,7 @@ end
 function Enemy:onDeath()
     if not self.isLive then
         self.sprite = ImageManager:new({
-            path = "assets/images/zomblizard/sprt_zomblizard_morto.png",
+            path = "assets/images/zomblizard/pigtauro_morto.png",
         }):getImage()
     end
 end
