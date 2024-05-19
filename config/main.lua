@@ -1,7 +1,7 @@
 local function newButton(text,fn)
     return {
       text = text,
-      fn = fn
+      fn = fn,
 
       now = false,
       last = false
@@ -30,11 +30,10 @@ function love.load()
       print("Exiting...")
       love.event.quit(0)
       end))     
-    end
-  end
 end
 
 function love.draw()
+  local button_HEIGHT = 50
   local ww = love.graphics.getWidth()
   local wh = love.graphics.getHeight()
 
@@ -44,10 +43,10 @@ function love.draw()
   local total_height = (button_HEIGHT + margin) * #buttons
   local cursor_y = 0
 
-  for i in button in ipairs(buttons) do
+  for i, button in ipairs(buttons) do
     button.last = button.now
     local bx = (ww * 0.5) - (button_width * 0.5)
-    local by = (wh * 0.5) - (total_height * 0.5) + cursor_y,
+    local by = (wh * 0.5) - (total_height * 0.5) + cursor_y
     
     local color = {1, 1, 1, 1}
 
@@ -57,11 +56,11 @@ function love.draw()
                       my >by and my < by + button_HEIGHT
 
     if highlight then
-      color = (2, 2, 2, 2)
+      color = {2, 2, 2, 2}
     end
     button.now = love.mouse.isDown(1)
     if button.now and not button.last and highlight then
-      button.fn
+      button.fn()
     end
     love.graphics.setColor(unpack(color))
     love.graphics.rectangle(
@@ -83,3 +82,4 @@ function love.draw()
     )
     cursor_y = cursor_y + (button_HEIGHT + margin)
   end
+end
