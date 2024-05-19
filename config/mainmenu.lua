@@ -1,31 +1,85 @@
+local function newButton(text,fn)
+    return {
+      text = text,
+      fn = fn
+
+      now = false,
+      last = false
+  }
+end
+
+local buttons = {}
+local font = nil
 
 function love.load()
-	global = {}
-	global.player = {}
-	global.player.max_health = 100
-	global.player.health = 100
+  font = love.graphics.newFont(32)
+  table.insert(buttons, newButton(
+    "Start Game",
+    function()
+      print("Starting game...")
+    end))
+      
+  table.insert(buttons, newButton(
+    "Options",
+    function()
+       print("work in progress")
+      end)) 
+  table.insert(buttons, newButton(
+    "Quit Game",
+    function()
+      print("Exiting...")
+      love.event.quit(0)
+      end))     
+    end
+  end
 end
- 
- 
-function love.update(dt)
-	local damage = 10*dt*(-math.random()*1)
-	local new_health = math.min(global.player.health+damage, global.player.max_health)
---	new_health = math.max(0, new_health)
-	new_health = (new_health > 0) and new_health or global.player.max_health -- restore health on death
-	global.player.health = new_health
-end
- 
- 
 
 function love.draw()
-	local sx,sy = 32,32
-	
-	local c = global.player.health/global.player.max_health
-	local color = {2-2*c,2*c,0} -- red by 0 and green by 1
-	love.graphics.setColor(color)
-	love.graphics.print('Health: ' .. math.floor(global.player.health),sx,sy)
-	love.graphics.rectangle('fill',sx,1.5*sy,global.player.health,sy/2)
-	
-	love.graphics.setColor(1,1,1)
-	love.graphics.rectangle('line',sx,1.5*sy,global.player.max_health,sy/2)
-end
+  local ww = love.graphics.getWidth()
+  local wh = love.graphics.getHeight()
+
+  local button_width = ww * (1/3)
+  local margin = 16
+
+  local total_height = (button_HEIGHT + margin) * #buttons
+  local cursor_y = 0
+
+  for i in button in ipairs(buttons) do
+    button.last = button.now
+    local bx = (ww * 0.5) - (button_width * 0.5)
+    local by = (wh * 0.5) - (total_height * 0.5) + cursor_y,
+    
+    local color = {1, 1, 1, 1}
+
+    local mx, my = love.mouse.getPosition()
+
+    local highlight = mx > bx and mx < bx + button_width and
+                      my >by and my < by + button_HEIGHT
+
+    if highlight then
+      color = (2, 2, 2, 2)
+    end
+    button.now = love.mouse.isDown(1)
+    if button.now and not button.last and highlight then
+      button.fn
+    end
+    love.graphics.setColor(unpack(color))
+    love.graphics.rectangle(
+      "fill",
+      bx,
+      by,
+      button_width,
+      button_HEIGHT
+    )
+    love.graphics.setColor(0, 0, 0, 1)
+    local textW = font:getWidth(button.text)
+    local textH = font:getHeight(button.text)
+
+    love.graphics.print(
+      button.text,
+      font,
+      (ww * 0.5) - textW * 0.5,
+      by + textH * 0,5
+    )
+    cursor_y = cursor_y + (button_HEIGHT + margin)
+  end
