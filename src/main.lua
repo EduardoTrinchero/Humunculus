@@ -1,5 +1,5 @@
 local Player = require("entities.player.player")
-local Enemey = require("entities.enemy.enemy")
+local Enemy = require("entities.enemy.enemy")
 local Bullet = require("entities.bullet.bullet")
 
 
@@ -21,10 +21,12 @@ function love.load()
         originOffsetY = 19,
     })
 
-    enemy = Enemey:new({
+    enemy = Enemy:new({
         health = 100,
         sprite = "assets/images/pigtauro.png",
         isLive = true,
+        hitbox = 65,
+        hurtbox = 50,
 
         posX = 10,
         posY = 10,
@@ -37,7 +39,8 @@ function love.load()
 
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
-    love.graphics.setBackgroundColor(1,1,1)
+    local r, g, b = love.math.colorFromBytes(242, 245, 66)
+    love.graphics.setBackgroundColor(r, g, b)
 end
 
 function lookAtCursor(mousex, mousey)
@@ -49,18 +52,13 @@ function love.update( dt )
     player:checkMoves(dt)
     enemy:goForPlayer(dt, player)
 
-
     mousex, mousey = love.mouse.getPosition()
     lookAtCursor(mousex, mousey)
 
-
-    -- if player.hitbox:hit(player.posX, player.posY, enemy.posX, enemy.posY) then 
+    -- if not enemy.isLive then 
     --     love.graphics.setColor(255, 0, 0)
-    -- else
-    --     love.graphics.setColor(0, 255, 0)
     -- end
 
-    
     if love.mouse.isDown(1) then
         local x, y = love.mouse.getPosition()
 
@@ -72,11 +70,12 @@ function love.update( dt )
         directionX = 450 * math.cos(angle)
         directionY = 450 * math.sin(angle)
 
-
         bullet = Bullet:new({
             sprite = 'assets/images/sprt_magia.png',
             initialX = initialX,
             initialY = initialY,
+            hurtbox = 50,
+            damage = 1,
 
             currentX = player.posX,
             currentY = player.posY,
@@ -93,7 +92,9 @@ function love.update( dt )
     for i, bullet in ipairs(bulletsStorage) do
 		bullet.currentX = bullet.currentX + (bullet.directionX * dt)
 		bullet.currentY = bullet.currentY + (bullet.directionY * dt)
-        if bullet.currentX == bullet.x and bullet.directionY == bullet.y then
+
+        if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isLive then 
+            enemy:onHit(bullet.damage)
             table.remove(bulletsStorage, i)
         end
 	end
@@ -107,12 +108,15 @@ function love.draw ()
     love.graphics.circle("line", player.posX, player.posY, 65)
     love.graphics.circle("line", enemy.posX, enemy.posY, 65)
 
+    love.graphics.circle("line", player.posX, player.posY, 50)
+    love.graphics.circle("line", enemy.posX, enemy.posY, 50)
+
     love.graphics.circle("line", player.posX, player.posY, 10)
     love.graphics.circle("line", enemy.posX, enemy.posY, 10)
 
-
     for i, bullet in ipairs(bulletsStorage) do  
         love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY)
+        love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
 	end
 
 end

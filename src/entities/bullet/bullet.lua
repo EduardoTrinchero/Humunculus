@@ -1,8 +1,11 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
+local Hurtbox = require "src.entities.hurtbox.hurtbox" 
+
 
 Bullet = {
     sprite = nil,
-
+    hurtbox = nil,
+    damage = 0,
     posX = 0,
     posy = 0
 }
@@ -17,10 +20,14 @@ function Bullet:new ( obj )
         path = obj.sprite
     }):getImage()
 
+    obj.hurtbox = Hurtbox:new({
+        radius = obj.hurtbox
+    })
+
     return obj
 end
 
-function Bullet:go(targetX, targetY)
+function Bullet:onHit(targetX, targetY)
     
 end
 
