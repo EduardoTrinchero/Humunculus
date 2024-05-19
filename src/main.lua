@@ -23,7 +23,7 @@ function love.load()
 
     enemy = Enemy:new({
         health = 100,
-        sprite = "assets/images/pigtauro_sprts/pigtauro.png",
+        sprite = "assets/images/zomblizard/sprt_zomblizard_prsg.png",
         isLive = true,
         hitbox = 65,
         hurtbox = 50,
