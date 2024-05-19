@@ -6,6 +6,7 @@ Player = {
     sprite = nil,
     isLive = true,
     hitbox = nil,
+    bulletRange = nil,
 
     posX = 0,
     posY = 0,
@@ -27,6 +28,10 @@ function Player:new (obj)
 
     obj.hitbox = Hitbox:new({
         radius = obj.hitbox
+    })
+
+    obj.bulletRange = Hitbox:new({
+        radius = obj.bulletRange
     })
 
     return obj

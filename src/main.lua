@@ -1,18 +1,22 @@
 local Player = require("entities.player.player")
 local Enemey = require("entities.enemy.enemy")
+local Bullet = require("entities.bullet.bullet")
+
+
+bulletsStorage = {}
 
 function love.load()
 
     player = Player:new({
         health = 100,
-        sprite = "assets/images/sprt_marlon_2.png",
+        sprite = "assets/images/sprt_marlon.png",
         isLive = true,
         hitbox = 65,
 
         posX = 250,
         posY = 250,
         angle = 0,
-        size = 6,
+        size = 3,
         originOffsetX = 19,
         originOffsetY = 19,
     })
@@ -36,15 +40,64 @@ function love.load()
     love.graphics.setBackgroundColor(1,1,1)
 end
 
+function lookAtCursor(mousex, mousey)
+    local angle = math.atan2(mousey-player.posY,mousex-player.posX)
+    player.angle = angle
+end
+
 function love.update( dt )
     player:checkMoves(dt)
     enemy:goForPlayer(dt, player)
 
-    if player.hitbox:hit(player.posX, player.posY, enemy.posX, enemy.posY) then 
-        love.graphics.setColor(255, 0, 0)
-    else
-        love.graphics.setColor(0, 255, 0)
+
+    mousex, mousey = love.mouse.getPosition()
+    lookAtCursor(mousex, mousey)
+
+
+    -- if player.hitbox:hit(player.posX, player.posY, enemy.posX, enemy.posY) then 
+    --     love.graphics.setColor(255, 0, 0)
+    -- else
+    --     love.graphics.setColor(0, 255, 0)
+    -- end
+
+    
+    if love.mouse.isDown(1) then
+        local x, y = love.mouse.getPosition()
+
+        initialX = player.posX  + player.size / 2
+        initialY = player.posY  + player.size / 2
+
+        local angle = math.atan2(mousey-player.posY,mousex-player.posX)
+
+        directionX = 450 * math.cos(angle)
+        directionY = 450 * math.sin(angle)
+
+
+        bullet = Bullet:new({
+            sprite = 'assets/images/sprt_magia.png',
+            initialX = initialX,
+            initialY = initialY,
+
+            currentX = player.posX,
+            currentY = player.posY,
+
+            directionX = directionX,
+            directionY = directionY,
+
+            x = x,
+            y = y
+        })
+        table.insert(bulletsStorage, bullet)
     end
+
+    for i, bullet in ipairs(bulletsStorage) do
+		bullet.currentX = bullet.currentX + (bullet.directionX * dt)
+		bullet.currentY = bullet.currentY + (bullet.directionY * dt)
+        if bullet.currentX == bullet.x and bullet.directionY == bullet.y then
+            table.remove(bulletsStorage, i)
+        end
+	end
+
 end
 
 function love.draw ()
@@ -56,4 +109,10 @@ function love.draw ()
 
     love.graphics.circle("line", player.posX, player.posY, 10)
     love.graphics.circle("line", enemy.posX, enemy.posY, 10)
+
+
+    for i, bullet in ipairs(bulletsStorage) do  
+        love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY)
+	end
+
 end
