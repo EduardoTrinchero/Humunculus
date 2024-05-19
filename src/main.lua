@@ -9,7 +9,7 @@ function love.load()
 
     player = Player:new({
         health = 100,
-        sprite = "assets/images/sprt_marlon.png",
+        sprite = "assets/images/marlon/sprt_marlon.png",
         isLive = true,
         hitbox = 65,
 
@@ -23,7 +23,7 @@ function love.load()
 
     enemy = Enemy:new({
         health = 100,
-        sprite = "assets/images/pigtauro.png",
+        sprite = "assets/images/pigtauro_sprts/pigtauro.png",
         isLive = true,
         hitbox = 65,
         hurtbox = 50,
@@ -71,7 +71,7 @@ function love.update( dt )
         directionY = 450 * math.sin(angle)
 
         bullet = Bullet:new({
-            sprite = 'assets/images/sprt_magia.png',
+            sprite = 'assets/images/bullet/sprt_magia.png',
             initialX = initialX,
             initialY = initialY,
             hurtbox = 50,
