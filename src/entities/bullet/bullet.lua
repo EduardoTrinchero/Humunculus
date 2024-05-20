@@ -7,7 +7,9 @@ Bullet = {
     hurtbox = nil,
     damage = 0,
     posX = 0,
-    posy = 0
+    posy = 0,
+    angle = 0,
+    size = 0
 }
 
 
