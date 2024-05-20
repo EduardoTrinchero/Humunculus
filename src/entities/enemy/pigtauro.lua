@@ -7,7 +7,7 @@ local Enemy = require 'src.entities.enemy.enemy'
 Pigtauro = Enemy:new({
     health = 100,
     sprite = "assets/images/pigtauro/pigtauro.png",
-    isLive = true,
+    isAlive = true,
     hitbox = 65,
     hurtbox = 50,
 
@@ -41,7 +41,7 @@ function Pigtauro:new ( obj )
 end
 
 function Pigtauro:onDeath()
-    if not self.isLive then
+    if not self.isAlive then
         self.sprite = ImageManager:new({
             path = "assets/images/pigtauro/pigtauro_morto.png",
         }):getImage()
