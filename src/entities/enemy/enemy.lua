@@ -5,7 +5,7 @@ local Hurtbox = require "src.entities.hurtbox.hurtbox"
 Enemy = {
     health = 100,
     sprite = nil,
-    isLive = true,
+    isAlive = true,
     hitbox = nil,
     hurtbox = nil,
     posX = 0,
@@ -45,12 +45,12 @@ function Enemy:onHit(hitDamage)
 end
 
 function Enemy:kill ()
-    self.isLive = false
+    self.isAlive = false
     self:onDeath()
 end
 
 function Enemy:onDeath()
-    if not self.isLive then
+    if not self.isAlive then
         self.sprite = ImageManager:new({
             path = "assets/images/zomblizard/pigtauro_morto.png",
         }):getImage()
@@ -58,7 +58,7 @@ function Enemy:onDeath()
 end
 
 function Enemy:goForPlayer(dt, player)
-    if self.isLive then
+    if self.isAlive then
         if self.posX ~= player.posX then 
             if self.posX < player.posX then
                 self.posX = self.posX + self.speed * dt 

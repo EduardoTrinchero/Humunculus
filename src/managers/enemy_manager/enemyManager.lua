@@ -16,7 +16,7 @@ function EnemyManager:getEnemies()
         Pigtauro:new({
             health = 100,
             sprite = "assets/images/pigtauro/pigtauro.png",
-            isLive = true,
+            isAlive = true,
             hitbox = 50,
             hurtbox = 50,
             speed = 80,    
@@ -31,7 +31,7 @@ function EnemyManager:getEnemies()
         Zomblizard:new({
             health = 100,
             sprite = "assets/images/zomblizard/sprt_zomblizard_prsg.png",
-            isLive = true,
+            isAlive = true,
             hitbox = 40,
             hurtbox = 40,
             speed = 120,
@@ -46,7 +46,7 @@ function EnemyManager:getEnemies()
         Vegadante:new({
             health = 100,
             sprite = "assets/images/vegadante/vegadante.png",
-            isLive = true,
+            isAlive = true,
             hitbox = 40,
             hurtbox = 40,
             speed = 60,

@@ -7,7 +7,7 @@ local Enemy = require 'src.entities.enemy.enemy'
 Zomblizard = Enemy:new({
     health = 100,
     sprite = "assets/images/zomblizard/sprt_zomblizard_prsg.png",
-    isLive = true,
+    isAlive = true,
     hitbox = 65,
     hurtbox = 50,
 
@@ -41,7 +41,7 @@ function Zomblizard:new ( obj )
 end
 
 function Zomblizard:onDeath()
-    if not self.isLive then
+    if not self.isAlive then
         self.sprite = ImageManager:new({
             path = "assets/images/zomblizard/sprt_zomblizard_morto.png",
         }):getImage()

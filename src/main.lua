@@ -13,7 +13,7 @@ function love.load()
     player = Player:new({
         health = 100,
         sprite = "assets/images/marlon/sprt_marlon.png",
-        isLive = true,
+        isAlive = true,
         hitbox = 65,
 
         posX = 250,
@@ -78,7 +78,7 @@ function love.update( dt )
             bullet.currentX = bullet.currentX + (bullet.directionX * dt)
             bullet.currentY = bullet.currentY + (bullet.directionY * dt)
     
-            if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isLive then 
+            if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isAlive then 
                 enemy:onHit(bullet.damage)
                 table.remove(bulletsStorage, i)
             end

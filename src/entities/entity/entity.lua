@@ -1,7 +1,7 @@
 Entity = {
     health = 100,
     sprite = nil,
-    isLive = true,
+    isAlive = true,
     hitbox = nil,
     hurtbox = nil,
     posX = 0,
@@ -46,7 +46,7 @@ function Entity:onHit(hitDamage)
 end
 
 function Entity:kill()
-    self.isLive = false
+    self.isAlive = false
     self:onDeath()
 end
 

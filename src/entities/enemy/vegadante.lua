@@ -7,7 +7,7 @@ local Enemy = require 'src.entities.enemy.enemy'
 Vegadante = Enemy:new({
     health = 100,
     sprite = "assets/images/vegadante/vegadante.png",
-    isLive = true,
+    isAlive = true,
     hitbox = 65,
     hurtbox = 50,
 
@@ -41,7 +41,7 @@ function Vegadante:new ( obj )
 end
 
 function Vegadante:onDeath()
-    if not self.isLive then
+    if not self.isAlive then
         self.sprite = ImageManager:new({
             path = "assets/images/vegadante/vegadante_morto.png",
         }):getImage()

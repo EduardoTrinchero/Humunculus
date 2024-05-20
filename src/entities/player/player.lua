@@ -4,7 +4,7 @@ local Hitbox = require "src.entities.hitbox.hitbox"
 Player = {
     health = 100,
     sprite = nil,
-    isLive = true,
+    isAlive = true,
     hitbox = nil,
     bulletRange = nil,
 
@@ -45,7 +45,7 @@ function Player:onHit (hitDamage)
 end
 
 function Player:kill ()
-    self.isLive = false
+    self.isAlive = false
 end
 
 function Player:checkMoves(dt)
