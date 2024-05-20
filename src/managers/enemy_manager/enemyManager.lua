@@ -57,7 +57,7 @@ function EnemyManager:getEnemies()
             origin = 56,
             originOffsetX = 16,
             originOffsetY = 26,
-        })
+        }),
     }
 end
 

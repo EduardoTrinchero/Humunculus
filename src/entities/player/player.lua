@@ -6,8 +6,13 @@ Player = {
     sprite = nil,
     isAlive = true,
     hitbox = nil,
-    bulletRange = nil,
 
+    bulletRange = nil,
+    bulletsStorage = {},
+    isLoading = false,
+    initialLoadTime = nil,
+    attackRatio = 1,
+    
     posX = 0,
     posY = 0,
     angle = 0,
@@ -73,4 +78,62 @@ function Player:checkMoves(dt)
     self.posX = self.posX + moveX * self.speed * dt
     self.posY = self.posY + moveY * self.speed * dt
 end
+
+function Player:throwSpell(mouseX, mouseY)
+    if not self.isLoading then
+        initialX = self.posX  + self.size / 2
+        initialY = self.posY  + self.size / 2
+
+        local angle = math.atan2(mouseY-self.posY, mouseX-self.posX)
+
+        directionX = 450 * math.cos(angle)
+        directionY = 450 * math.sin(angle)
+
+        bullet = Bullet:new({
+            sprite = 'assets/images/bullet/sprt_magia.png',
+            initialX = initialX,
+            initialY = initialY,
+            hurtbox = 50,
+            angle = 0,
+            size = 2,
+            damage = 10,
+
+            currentX = self.posX,
+            currentY = self.posY,
+
+            directionX = directionX,
+            directionY = directionY,
+
+            originOffsetX = 1,
+            originOffsetY = 1,
+        })
+        table.insert(self.bulletsStorage, bullet)
+        self.isLoading = true
+    else
+
+    end
+end
+
+function Player:lookAtCursor(mouseX, mouseY)
+    local angle = math.atan2(mouseY-self.posY,mouseX-self.posX)
+    self.angle = angle
+end
+
+function Player:onLoading()
+
+    if player.isLoading then 
+        time = love.timer.getTime()
+
+        if not self.initialLoadTime then 
+            self.initialLoadTime = time
+        else
+            if time > self.initialLoadTime + self.attackRatio then
+                self.isLoading = false
+                self.initialLoadTime = nil
+            end
+        end
+    end
+
+end
+
 return Player
