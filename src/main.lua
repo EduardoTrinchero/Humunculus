@@ -1,38 +1,25 @@
+local EnemyManager = require("managers.enemy_manager.enemyManager")
+
 local Player = require("entities.player.player")
 local Enemy = require("entities.enemy.enemy")
 local Bullet = require("entities.bullet.bullet")
- 
+
 
 bulletsStorage = {}
 
 function love.load()
+    enemies = EnemyManager:new():getEnemies()
 
     player = Player:new({
         health = 100,
         sprite = "assets/images/marlon/sprt_marlon.png",
-        isLive = true,
+        isAlive = true,
         hitbox = 65,
 
         posX = 250,
         posY = 250,
         angle = 0,
         size = 3,
-        originOffsetX = 19,
-        originOffsetY = 19,
-    })
-
-    enemy = Enemy:new({
-        health = 100,
-        sprite = "assets/images/zomblizard/sprt_zomblizard_prsg.png",
-        isLive = true,
-        hitbox = 65,
-        hurtbox = 50,
-
-        posX = 10,
-        posY = 10,
-        angle = 0,
-        size = 4,
-        origin = 56,
         originOffsetX = 19,
         originOffsetY = 19,
     })
@@ -50,14 +37,9 @@ end
 
 function love.update( dt )
     player:checkMoves(dt)
-    enemy:goForPlayer(dt, player)
 
     mousex, mousey = love.mouse.getPosition()
     lookAtCursor(mousex, mousey)
-
-    -- if not enemy.isLive then 
-    --     love.graphics.setColor(255, 0, 0)
-    -- end
 
     if love.mouse.isDown(1) then
         local x, y = love.mouse.getPosition()
@@ -89,34 +71,41 @@ function love.update( dt )
         table.insert(bulletsStorage, bullet)
     end
 
-    for i, bullet in ipairs(bulletsStorage) do
-		bullet.currentX = bullet.currentX + (bullet.directionX * dt)
-		bullet.currentY = bullet.currentY + (bullet.directionY * dt)
+    for i, enemy in ipairs(enemies) do
+        enemy:goForPlayer(dt, player)
 
-        if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isLive then 
-            enemy:onHit(bullet.damage)
-            table.remove(bulletsStorage, i)
+        for i, bullet in ipairs(bulletsStorage) do
+            bullet.currentX = bullet.currentX + (bullet.directionX * dt)
+            bullet.currentY = bullet.currentY + (bullet.directionY * dt)
+    
+            if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isAlive then 
+                enemy:onHit(bullet.damage)
+                table.remove(bulletsStorage, i)
+            end
         end
-	end
-
+    end
 end
 
 function love.draw ()
-    love.graphics.draw( enemy.sprite, enemy.posX, enemy.posY, enemy.angle, enemy.size, enemy.size, enemy.originOffsetX, enemy.originOffsetY)
+    -- love.graphics.draw( enemy.sprite, enemy.posX, enemy.posY, enemy.angle, enemy.size, enemy.size, enemy.originOffsetX, enemy.originOffsetY)
     love.graphics.draw( player.sprite, player.posX, player.posY, player.angle, player.size, player.size, player.originOffsetX, player.originOffsetY)
 
-    love.graphics.circle("line", player.posX, player.posY, 65)
-    love.graphics.circle("line", enemy.posX, enemy.posY, 65)
+    -- love.graphics.circle("line", player.posX, player.posY, 65)
+    -- love.graphics.circle("line", player.posX, player.posY, 50)
+    -- love.graphics.circle("line", player.posX, player.posY, 10)
 
-    love.graphics.circle("line", player.posX, player.posY, 50)
-    love.graphics.circle("line", enemy.posX, enemy.posY, 50)
 
-    love.graphics.circle("line", player.posX, player.posY, 10)
-    love.graphics.circle("line", enemy.posX, enemy.posY, 10)
+    for i, enemy in ipairs(enemies) do
+        love.graphics.draw( enemy.sprite, enemy.posX, enemy.posY, enemy.angle, enemy.size, enemy.size, enemy.originOffsetX, enemy.originOffsetY)
+    
+        -- love.graphics.circle("line", enemy.posX, enemy.posY, 40)
+        -- love.graphics.circle("line", enemy.posX, enemy.posY, 40)
+        -- love.graphics.circle("line", enemy.posX, enemy.posY, 10)
+    end
 
     for i, bullet in ipairs(bulletsStorage) do  
         love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY)
-        love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
+        -- love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
 	end
 
 end
