@@ -78,7 +78,7 @@ function love.draw()
       button.text,
       font,
       (ww * 0.5) - textW * 0.5,
-      by + textH * 0,5
+      by + textH * 0.5
     )
     cursor_y = cursor_y + (button_HEIGHT + margin)
   end
