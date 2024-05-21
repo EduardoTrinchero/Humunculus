@@ -12,6 +12,7 @@ local buttons = {}
 local font = nil
 
 function love.load()
+  love.graphics.setBackgroundColor(128,0,0)
   font = love.graphics.newFont(32)
   table.insert(buttons, newButton(
     "Start Game",
@@ -53,10 +54,10 @@ function love.draw()
     local mx, my = love.mouse.getPosition()
 
     local highlight = mx > bx and mx < bx + button_width and
-                      my >by and my < by + button_HEIGHT
+                      my > by and my < by + button_HEIGHT
 
     if highlight then
-      color = {2, 2, 2, 2}
+      color = {0, 51, 0, 2}
     end
     button.now = love.mouse.isDown(1)
     if button.now and not button.last and highlight then
