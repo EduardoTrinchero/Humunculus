@@ -1,5 +1,6 @@
-local EnemyManager = require("managers.enemy_manager.enemyManager")
+local Camera = require "lib.hump.camera"
 
+local EnemyManager = require("managers.enemy_manager.enemyManager")
 local Player = require("entities.player.player")
 local Enemy = require("entities.enemy.enemy")
 local Bullet = require("entities.bullet.bullet")
@@ -25,6 +26,8 @@ function love.load()
         originOffsetY = 19,
     })
 
+    camera = Camera(player.posX, player.posY)
+
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
     local r, g, b = love.math.colorFromBytes(242, 245, 66)
@@ -33,6 +36,8 @@ end
 
 function love.update( dt )
     mouseX, mouseY = love.mouse.getPosition()
+    local cameraX, cameraY = player.posX - camera.x, player.posY - camera.y
+
     player:checkMoves(dt)
     player:lookAtCursor(mouseX, mouseY)
     player:onLoading()
@@ -56,29 +61,28 @@ function love.update( dt )
             end
         end
     end
+
+    camera:move(cameraX/2, cameraY/2)
 end
 
-function love.draw ()
-    player:draw()
+function love.draw()
+    -- camera:attach()
+        player:draw()
+        player:onDebug()
 
-    -- love.graphics.circle("line", player.posX, player.posY, 65)
-    -- love.graphics.circle("line", player.posX, player.posY, 50)
-    love.graphics.circle("line", player.posX, player.posY, 10)
-
-
-    for i, enemy in ipairs(enemies) do
-        love.graphics.draw( enemy.sprite, enemy.posX, enemy.posY, enemy.angle, enemy.size, enemy.size, enemy.originOffsetX, enemy.originOffsetY)
-    
-        -- love.graphics.circle("line", enemy.posX, enemy.posY, 40)
-        love.graphics.circle("line", enemy.posX, enemy.posY, 40)
-        love.graphics.circle("line", enemy.posX, enemy.posY, 10)
-    end
-
-    if player.bulletsStorage then
-        for i, bullet in ipairs(player.bulletsStorage) do  
-            love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY, bullet.angle, bullet.size,  bullet.size, bullet.originOffsetX, bullet.originOffsetY)
-            love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
+        for i, enemy in ipairs(enemies) do
+            enemy:draw()
+            enemy:onDebug()
         end
-    end
+
+        if player.bulletsStorage then
+            for i, bullet in ipairs(player.bulletsStorage) do  
+                love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY, bullet.angle, bullet.size,  bullet.size, bullet.originOffsetX, bullet.originOffsetY)
+                love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
+            end
+        end
+    -- camera:detach()
+
+    
 
 end

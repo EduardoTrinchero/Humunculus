@@ -55,4 +55,9 @@ function Entity:kill()
     self:onDeath()
 end
 
+function Entity:onDebug()
+    love.graphics.circle("line", self.posX, self.posY, 10)
+    love.graphics.circle("line", self.posX, self.posY, 40)
+end
+
 return Entity
