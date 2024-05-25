@@ -10,7 +10,8 @@ Entity = {
     size = 1,
     originOffsetX = 19,
     originOffsetY = 19,
-    speed = 100
+    speed = 100,
+    bulletsStorage = {}
 }
 Entity.__index = Entity
 
@@ -18,13 +19,17 @@ function Entity:new(obj)
     obj = obj or {}
     setmetatable(obj, self)
 
-    obj.sprite = ImageManager:new({
-        path = obj.sprite
-    }):getImage()
+    if obj.sprite then
+        obj.sprite = ImageManager:new({
+            path = obj.sprite
+        }):getImage()
+    end
 
-    obj.hitbox = Hitbox:new({
-        radius = obj.hitbox
-    })
+    if obj.hitbox then
+        obj.hitbox = Hitbox:new({
+            radius = obj.hitbox
+        })
+    end
     
     return obj
 end
@@ -48,9 +53,6 @@ end
 function Entity:kill()
     self.isAlive = false
     self:onDeath()
-end
-
-function Entity:onDeath()
 end
 
 return Entity

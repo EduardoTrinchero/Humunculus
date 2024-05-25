@@ -1,21 +1,9 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Hurtbox = require "src.entities.hurtbox.hurtbox" 
+local Entity = require "src.entities.entity.entity"
 
-Enemy = {
-    health = 100,
-    sprite = nil,
-    isAlive = true,
-    hitbox = nil,
-    hurtbox = nil,
-    posX = 0,
-    posY = 0,
-    angle = 0,
-    size = 1,
-    originOffsetX = 19,
-    originOffsetY = 19,
-    speed = 100
-}
+Enemy = Entity:new({})
     
 function Enemy:new (obj)
     obj = obj or {}
@@ -35,18 +23,6 @@ function Enemy:new (obj)
     })
 
     return obj
-end
-
-function Enemy:onHit(hitDamage)
-    self.health = self.health - hitDamage
-    if self.health < 0  then
-        self:kill()
-    end
-end
-
-function Enemy:kill ()
-    self.isAlive = false
-    self:onDeath()
 end
 
 function Enemy:onDeath()

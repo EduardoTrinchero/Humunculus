@@ -16,7 +16,7 @@ function love.load()
         isAlive = true,
         hitbox = 65,
         attackRatio = 0.5,
-
+        speed = 300,
         posX = 250,
         posY = 250,
         angle = 0,
@@ -44,20 +44,22 @@ function love.update( dt )
     for i, enemy in ipairs(enemies) do
         enemy:goForPlayer(dt, player)
 
-        for i, bullet in ipairs(player.bulletsStorage) do
-            bullet.currentX = bullet.currentX + (bullet.directionX * dt)
-            bullet.currentY = bullet.currentY + (bullet.directionY * dt)
-    
-            if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isAlive then 
-                enemy:onHit(bullet.damage)
-                table.remove(player.bulletsStorage, i)
+        if player.bulletsStorage then
+            for i, bullet in ipairs(player.bulletsStorage) do
+                bullet.currentX = bullet.currentX + (bullet.directionX * dt)
+                bullet.currentY = bullet.currentY + (bullet.directionY * dt)
+        
+                if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isAlive then 
+                    enemy:onHit(bullet.damage)
+                    table.remove(player.bulletsStorage, i)
+                end
             end
         end
     end
 end
 
 function love.draw ()
-    love.graphics.draw( player.sprite, player.posX, player.posY, player.angle, player.size, player.size, player.originOffsetX, player.originOffsetY)
+    player:draw()
 
     -- love.graphics.circle("line", player.posX, player.posY, 65)
     -- love.graphics.circle("line", player.posX, player.posY, 50)
@@ -68,13 +70,15 @@ function love.draw ()
         love.graphics.draw( enemy.sprite, enemy.posX, enemy.posY, enemy.angle, enemy.size, enemy.size, enemy.originOffsetX, enemy.originOffsetY)
     
         -- love.graphics.circle("line", enemy.posX, enemy.posY, 40)
-        -- love.graphics.circle("line", enemy.posX, enemy.posY, 40)
+        love.graphics.circle("line", enemy.posX, enemy.posY, 40)
         love.graphics.circle("line", enemy.posX, enemy.posY, 10)
     end
 
-    for i, bullet in ipairs(player.bulletsStorage) do  
-        love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY, bullet.angle, bullet.size,  bullet.size, bullet.originOffsetX, bullet.originOffsetY)
-        love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
-	end
+    if player.bulletsStorage then
+        for i, bullet in ipairs(player.bulletsStorage) do  
+            love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY, bullet.angle, bullet.size,  bullet.size, bullet.originOffsetX, bullet.originOffsetY)
+            love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
+        end
+    end
 
 end
