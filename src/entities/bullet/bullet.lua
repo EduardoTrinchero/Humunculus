@@ -1,17 +1,8 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
 local Hurtbox = require "src.entities.hurtbox.hurtbox" 
+local Entity = require "src.entities.entity.entity"
 
-
-Bullet = {
-    sprite = nil,
-    hurtbox = nil,
-    damage = 0,
-    posX = 0,
-    posy = 0,
-    angle = 0,
-    size = 0
-}
-
+Bullet = Entity:new({})
 
 function Bullet:new ( obj )
     obj = obj or {}
@@ -27,10 +18,6 @@ function Bullet:new ( obj )
     })
 
     return obj
-end
-
-function Bullet:onHit(targetX, targetY)
-    
 end
 
 return Bullet
