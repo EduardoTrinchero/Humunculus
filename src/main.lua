@@ -13,7 +13,8 @@ function love.load()
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
     local r, g, b = love.math.colorFromBytes(242, 245, 66)
-    love.graphics.setBackgroundColor(r, g, b)
+    -- love.graphics.setBackgroundColor(r, g, b)
+    background = love.graphics.newImage("assets/images/background/sala2.png")
 end
 
 function love.update( dt )
@@ -50,6 +51,12 @@ function love.update( dt )
 end
 
 function love.draw()
+    for i = 0, love.graphics.getWidth() / background:getWidth() do
+        for j = 0, love.graphics.getHeight() / background:getHeight() do
+            love.graphics.draw(background, i * background:getWidth(), j * background:getHeight())
+        end
+    end
+
         player:draw()
         player:onDebug()
 
