@@ -35,12 +35,24 @@ function Entity:new(obj)
 end
 
 function Entity:draw()
-    love.graphics.draw(
-        self.sprite, 
-        self.posX, self.posY, 
-        self.angle, self.size, self.size, 
-        self.originOffsetX, self.originOffsetY
-    )
+    
+    if self.animation then 
+        local spriteNum = math.floor(self.animation.currentTime / self.animation.duration * #self.animation.quads) + 1
+        love.graphics.draw(
+            self.animation.spriteSheet, 
+            self.animation.quads[spriteNum],
+            self.posX, self.posY, 
+            self.angle, self.size, self.size, 
+            self.originOffsetX, self.originOffsetY
+        )
+    else            
+        love.graphics.draw(
+            self.sprite, 
+            self.posX, self.posY, 
+            self.angle, self.size, self.size, 
+            self.originOffsetX, self.originOffsetY
+        )
+    end
 end
 
 function Entity:onHit(hitDamage)
@@ -58,6 +70,13 @@ end
 function Entity:onDebug()
     love.graphics.circle("line", self.posX, self.posY, 10)
     love.graphics.circle("line", self.posX, self.posY, 40)
+end
+
+function Entity:updateAnimation(dt)
+    self.animation.currentTime = self.animation.currentTime + dt
+    if self.animation.currentTime >= self.animation.duration then
+        self.animation.currentTime = self.animation.currentTime - self.animation.duration
+    end
 end
 
 return Entity
