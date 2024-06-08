@@ -30,6 +30,11 @@ function love.update( dt )
     for i, enemy in ipairs(enemies) do
         enemy:goForPlayer(dt, player)
 
+        enemy.animation.currentTime = enemy.animation.currentTime + dt
+        if enemy.animation.currentTime >= enemy.animation.duration then
+            enemy.animation.currentTime = enemy.animation.currentTime - enemy.animation.duration
+        end
+
         if player.bulletsStorage then
             for i, bullet in ipairs(player.bulletsStorage) do
                 bullet.currentX = bullet.currentX + (bullet.directionX * dt)
@@ -45,12 +50,12 @@ function love.update( dt )
 end
 
 function love.draw()
-    -- camera:attach()
         player:draw()
         player:onDebug()
 
         for i, enemy in ipairs(enemies) do
             enemy:draw()
+
             enemy:onDebug()
         end
 
@@ -59,9 +64,6 @@ function love.draw()
                 love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY, bullet.angle, bullet.size,  bullet.size, bullet.originOffsetX, bullet.originOffsetY)
                 love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
             end
-        end
-    -- camera:detach()
-
-    
+        end    
 
 end

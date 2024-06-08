@@ -1,4 +1,5 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
+local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Hurtbox = require "src.entities.hurtbox.hurtbox" 
 local Entity = require "src.entities.entity.entity"
@@ -13,6 +14,12 @@ function Enemy:new (obj)
     obj.sprite = ImageManager:new({
         path = obj.sprite
     }):getImage()
+
+    if obj.animation then
+        obj.animation = AnimationManager:new({
+            image = obj.animation
+        }):newAnimation(32, 32, 1)
+    end
 
     obj.hitbox = Hitbox:new({
         radius = obj.hitbox
