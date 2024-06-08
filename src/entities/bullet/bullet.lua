@@ -20,4 +20,16 @@ function Bullet:new ( obj )
     return obj
 end
 
+function Bullet:dispatch(dt, bulletsStorage, target)
+    for i, bullet in ipairs(bulletsStorage) do
+        bullet.currentX = bullet.currentX + (bullet.directionX * dt)
+        bullet.currentY = bullet.currentY + (bullet.directionY * dt)
+
+        if target.hitbox:hit(target.posX, target.posY, bullet.currentX, bullet.currentY) and target.isAlive then 
+            target:onHit(bullet.damage)
+            table.remove(bulletsStorage, i)
+        end
+    end
+end
+
 return Bullet

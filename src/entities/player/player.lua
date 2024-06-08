@@ -75,8 +75,8 @@ function Player:throwSpell(mouseX, mouseY)
             directionX = directionX,
             directionY = directionY,
 
-            originOffsetX = 1,
-            originOffsetY = 1,
+            originOffsetX = 20,
+            originOffsetY = 20,
         })
         table.insert(self.bulletsStorage, bullet)
         self.isLoading = true

@@ -2,6 +2,7 @@ local EnemyManager = require("managers.enemy_manager.enemyManager")
 local PlayerManager = require("managers.player_manager.playerManager")
 
 local Bullet = require("entities.bullet.bullet")
+local Background = require("entities.background.background")
 
 
 bulletsStorage = {}
@@ -12,9 +13,9 @@ function love.load()
 
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
-    local r, g, b = love.math.colorFromBytes(242, 245, 66)
-    -- love.graphics.setBackgroundColor(r, g, b)
-    background = love.graphics.newImage("assets/images/background/sala2.png")
+    background = Background:new({
+        sprite="assets/images/background/sala2.png"
+    })
 end
 
 function love.update( dt )
@@ -30,47 +31,30 @@ function love.update( dt )
 
     for i, enemy in ipairs(enemies) do
         enemy:goForPlayer(dt, player)
-
-        enemy.animation.currentTime = enemy.animation.currentTime + dt
-        if enemy.animation.currentTime >= enemy.animation.duration then
-            enemy.animation.currentTime = enemy.animation.currentTime - enemy.animation.duration
-        end
+        enemy:updateAnimation(dt)
 
         if player.bulletsStorage then
-            for i, bullet in ipairs(player.bulletsStorage) do
-                bullet.currentX = bullet.currentX + (bullet.directionX * dt)
-                bullet.currentY = bullet.currentY + (bullet.directionY * dt)
-        
-                if enemy.hitbox:hit(enemy.posX, enemy.posY, bullet.currentX, bullet.currentY) and enemy.isAlive then 
-                    enemy:onHit(bullet.damage)
-                    table.remove(player.bulletsStorage, i)
-                end
-            end
+            Bullet:dispatch(dt, player.bulletsStorage, enemy)
         end
     end
 end
 
 function love.draw()
-    for i = 0, love.graphics.getWidth() / background:getWidth() do
-        for j = 0, love.graphics.getHeight() / background:getHeight() do
-            love.graphics.draw(background, i * background:getWidth(), j * background:getHeight())
-        end
+    background:draw()
+
+    player:draw()
+    player:onDebug()
+
+    for i, enemy in ipairs(enemies) do
+        enemy:draw()
+        enemy:onDebug()
     end
 
-        player:draw()
-        player:onDebug()
-
-        for i, enemy in ipairs(enemies) do
-            enemy:draw()
-
-            enemy:onDebug()
+    if player.bulletsStorage then
+        for i, bullet in ipairs(player.bulletsStorage) do  
+            love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY, bullet.angle, bullet.size,  bullet.size, bullet.originOffsetX, bullet.originOffsetY)
+            -- love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
         end
-
-        if player.bulletsStorage then
-            for i, bullet in ipairs(player.bulletsStorage) do  
-                love.graphics.draw( bullet.sprite, bullet.currentX, bullet.currentY, bullet.angle, bullet.size,  bullet.size, bullet.originOffsetX, bullet.originOffsetY)
-                love.graphics.circle("line", bullet.currentX, bullet.currentY, 10)
-            end
-        end    
+    end    
 
 end

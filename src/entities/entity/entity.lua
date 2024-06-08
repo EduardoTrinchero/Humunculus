@@ -72,4 +72,11 @@ function Entity:onDebug()
     love.graphics.circle("line", self.posX, self.posY, 40)
 end
 
+function Entity:updateAnimation(dt)
+    self.animation.currentTime = self.animation.currentTime + dt
+    if self.animation.currentTime >= self.animation.duration then
+        self.animation.currentTime = self.animation.currentTime - self.animation.duration
+    end
+end
+
 return Entity

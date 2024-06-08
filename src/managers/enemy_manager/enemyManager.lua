@@ -27,7 +27,7 @@ function EnemyManager:getEnemies()
             size = 4,
             origin = 56,
             originOffsetX = 16,
-            originOffsetY = 26,
+            originOffsetY = 16,
         })
     }
 end
