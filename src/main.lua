@@ -1,8 +1,6 @@
-local Camera = require "lib.hump.camera"
-
 local EnemyManager = require("managers.enemy_manager.enemyManager")
-local Player = require("entities.player.player")
-local Enemy = require("entities.enemy.enemy")
+local PlayerManager = require("managers.player_manager.playerManager")
+
 local Bullet = require("entities.bullet.bullet")
 
 
@@ -10,23 +8,7 @@ bulletsStorage = {}
 
 function love.load()
     enemies = EnemyManager:new():getEnemies()
-
-    player = Player:new({
-        health = 100,
-        sprite = "assets/images/marlon/sprt_marlon.png",
-        isAlive = true,
-        hitbox = 65,
-        attackRatio = 0.5,
-        speed = 300,
-        posX = 250,
-        posY = 250,
-        angle = 0,
-        size = 3,
-        originOffsetX = 19,
-        originOffsetY = 19,
-    })
-
-    camera = Camera(player.posX, player.posY)
+    player = PlayerManager:new():getPlayer()
 
     mouse = love.mouse.getSystemCursor('crosshair')
     love.mouse.setVisible ( true )
@@ -36,7 +18,6 @@ end
 
 function love.update( dt )
     mouseX, mouseY = love.mouse.getPosition()
-    local cameraX, cameraY = player.posX - camera.x, player.posY - camera.y
 
     player:checkMoves(dt)
     player:lookAtCursor(mouseX, mouseY)
@@ -61,8 +42,6 @@ function love.update( dt )
             end
         end
     end
-
-    camera:move(cameraX/2, cameraY/2)
 end
 
 function love.draw()
