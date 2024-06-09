@@ -17,21 +17,23 @@ Entity.__index = Entity
 
 function Entity:new(obj)
     obj = obj or {}
-    setmetatable(obj, self)
+    setmetatable(obj, self)    
+    obj:load()
+    return obj
+end
 
-    if obj.sprite then
-        obj.sprite = ImageManager:new({
-            path = obj.sprite
+function Entity:load()
+    if self.sprite then
+        self.sprite = ImageManager:new({
+            path = self.sprite
         }):getImage()
     end
 
-    if obj.hitbox then
-        obj.hitbox = Hitbox:new({
-            radius = obj.hitbox
+    if self.hitbox then
+        self.hitbox = Hitbox:new({
+            radius = self.hitbox
         })
     end
-    
-    return obj
 end
 
 function Entity:draw()
@@ -76,6 +78,13 @@ function Entity:updateAnimation(dt)
     self.animation.currentTime = self.animation.currentTime + dt
     if self.animation.currentTime >= self.animation.duration then
         self.animation.currentTime = self.animation.currentTime - self.animation.duration
+    end
+end
+
+function Entity:setState(state)
+    if self.state ~= state then
+        self.state = state
+        self.animation = self.animations[state]
     end
 end
 

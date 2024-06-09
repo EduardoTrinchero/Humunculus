@@ -4,45 +4,94 @@ local Hitbox = require "src.entities.hitbox.hitbox"
 local Entity = require "src.entities.entity.entity"
 
 Player = Entity:new({})
+
+PlayerStates = {
+    IDLE = "idle_",
+    MOVE = 'move_',
+    CAST = "cast_",
+}
     
 function Player:new (obj)
     obj = obj or {}
     setmetatable(obj, self)
     self.__index = self
+    obj:load()
+    return obj
+end
 
-    obj.sprite = ImageManager:new({
-        path = obj.sprite
+function Player:load()
+    self.sprite = ImageManager:new({
+        path = self.sprite
     }):getImage()
-
-    obj.animation = AnimationManager:new({
-    }):newAnimation(obj.sprite, 32, 32, 1)
-
-    obj.hitbox = Hitbox:new({
-        radius = obj.hitbox
+    self.animation = AnimationManager:new({
+        }):newAnimation(self.sprite, 32, 32, 1)
+    self.hitbox = Hitbox:new({
+        radius = self.hitbox
+    })
+    self.bulletRange = Hitbox:new({
+        radius = self.bulletRange
     })
 
-    obj.bulletRange = Hitbox:new({
-        radius = obj.bulletRange
-    })
-
-    obj.isMoving = false
-
-    obj.animations = {
-        idle = AnimationManager:new({
+    self.animations = {
+        idle_r = AnimationManager:new({
             }):newAnimation(ImageManager:new({
                 path = "assets/animations/marlon/marlonventoidle_sheet.png"
-            }):getImage(), 32, 32, 1),
-        move = AnimationManager:new({
+        }):getImage(), 32, 32, 1),
+        idle_l = AnimationManager:new({
+        }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonventoidlereverso_sheet.png"
+        }):getImage(), 32, 32, 1),
+
+        move_r = AnimationManager:new({
             }):newAnimation(ImageManager:new({
                 path = "assets/animations/marlon/marlonventoandando_sheet.png"
-            }):getImage(), 32, 32, 0.5),
-        cast = AnimationManager:new({
+        }):getImage(), 32, 32, 0.5),
+        move_l = AnimationManager:new({
+        }):newAnimation(ImageManager:new({
+            path = "assets/animations/marlon/marlonventoandandoreverso_sheet.png"
+        }):getImage(), 32, 32, 0.5),
+
+
+        cast_r = AnimationManager:new({
             }):newAnimation(ImageManager:new({
                 path = "assets/animations/marlon/marlonventocastando_sheet.png"
-            }):getImage(), 32, 32, self.attackRatio)
+        }):getImage(), 32, 32, self.attackRatio),
+        cast_l = AnimationManager:new({
+        }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonventocastandoreverso_sheet.png"
+        }):getImage(), 32, 32, self.attackRatio),
     }
 
-    return obj
+    self.animation = self.animations['idle_r']
+    self.isMovingR = false
+    self.isMovingL = false
+    self.isCasting = false
+    self.castTimer = 0
+end
+
+function Player:update(dt)
+    self:checkMoves(dt)
+    self:onLoading()
+    self:updateAnimation(dt)
+
+    if love.mouse.isDown(1) then
+        self:throwSpell(mouseX, mouseY)
+    end
+
+    if self.isCasting then
+        self.castTimer = self.castTimer - dt
+        if self.castTimer <= 0 then
+            self.isCasting = false
+        end
+    end
+
+    if self.isCasting then
+        self:setState(PlayerStates.CAST .. self:checkSideAnimation(mouseX, mouseY))
+    elseif self.isMoving then
+        self:setState(PlayerStates.MOVE .. self:checkSideAnimation(mouseX, mouseY))
+    else
+        self:setState(PlayerStates.IDLE .. self:checkSideAnimation(mouseX, mouseY))
+    end
 end
 
 function Player:checkMoves(dt)
@@ -84,7 +133,7 @@ end
 
 function Player:throwSpell(mouseX, mouseY)
     if not self.isLoading then
-        self:onCast()
+        self:onCast(1)
         initialX = self.posX  + self.size / 2
         initialY = self.posY  + self.size / 2
 
@@ -123,6 +172,17 @@ function Player:lookAtCursor(mouseX, mouseY)
     self.angle = angle
 end
 
+function Player:checkSideAnimation(mouseX, mouseY)
+
+    if mouseX < self.posX then
+        print("The mouse is on the left side of the circle")
+        return 'l'
+    else
+        print("The mouse is on the right side of the circle")
+        return 'r'
+    end
+end
+
 function Player:onLoading()
 
     if player.isLoading then 
@@ -141,15 +201,17 @@ function Player:onLoading()
 end
 
 function Player:onIdle()
-   self.animation = self.animations['idle']
+    self:setState(PlayerStates.IDLE)
 end
 
 function Player:onMove()
-    self.animation = self.animations['move']
+    self:setState(PlayerStates.MOVE)
 end
 
-function Player:onCast()
-    self.animation = self.animations['cast']
+function Player:onCast(duration)
+    self.isCasting = true
+    self.castTimer = duration
+    self:setState(PlayerStates.CAST)
 end
 
 return Player

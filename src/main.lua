@@ -21,19 +21,7 @@ end
 function love.update( dt )
     mouseX, mouseY = love.mouse.getPosition()
 
-    player:checkMoves(dt)
-    player:onLoading()
-    player:updateAnimation(dt)
-    
-    if player.isMoving then 
-        player:onMove()
-    else 
-        player:onIdle()
-    end
-
-    if love.mouse.isDown(1) then
-        player:throwSpell(mouseX, mouseY)
-    end
+    player:update(dt)
 
     for i, enemy in ipairs(enemies) do
         enemy:goForPlayer(dt, player)
