@@ -19,7 +19,7 @@ function PlayerManager:getPlayer()
             posX = 250,
             posY = 250,
             angle = 0,
-            size = 3,
+            size = 5,
             originOffsetX = 19,
             originOffsetY = 19,
             attackRatio = 1

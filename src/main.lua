@@ -24,13 +24,19 @@ function love.update( dt )
     player:checkMoves(dt)
     player:onLoading()
     player:updateAnimation(dt)
+    
+    if player.isMoving then 
+        player:onMove()
+    else 
+        player:onIdle()
+    end
 
     if love.mouse.isDown(1) then
         player:throwSpell(mouseX, mouseY)
     end
 
     for i, enemy in ipairs(enemies) do
-        enemy:goForPlayer(dt, player)
+        -- enemy:goForPlayer(dt, player)
         enemy:updateAnimation(dt)
 
         if player.bulletsStorage then
@@ -43,11 +49,11 @@ function love.draw()
     background:draw()
 
     player:draw()
-    player:onDebug()
+    -- player:onDebug()
 
     for i, enemy in ipairs(enemies) do
         enemy:draw()
-        enemy:onDebug()
+        -- enemy:onDebug()
     end
 
     if player.bulletsStorage then

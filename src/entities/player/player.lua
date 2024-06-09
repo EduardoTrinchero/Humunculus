@@ -2,6 +2,7 @@ local ImageManager = require "src.managers.image_manager.imageManager"
 local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Entity = require "src.entities.entity.entity"
+local Dispatcher = require "utils.Dispatcher"
 
 Player = Entity:new({})
     
@@ -25,6 +26,8 @@ function Player:new (obj)
         radius = obj.bulletRange
     })
 
+    obj.isMoving = false
+
     return obj
 end
 
@@ -32,16 +35,19 @@ function Player:checkMoves(dt)
     local moveX, moveY = 0, 0
 
     if love.keyboard.isDown("a") then
+        self.isMoving = true
         moveX = moveX - 1
-    end
-    if love.keyboard.isDown("d") then
+    elseif love.keyboard.isDown("d") then
+        self.isMoving = true
         moveX = moveX + 1
-    end
-    if love.keyboard.isDown("w") then
+    elseif love.keyboard.isDown("w") then
+        self.isMoving = true
         moveY = moveY - 1
-    end
-    if love.keyboard.isDown("s") then
+    elseif love.keyboard.isDown("s") then
+        self.isMoving = true
         moveY = moveY + 1
+    else
+        self.isMoving = false
     end
 
     local length = math.sqrt(moveX^2 + moveY^2)
@@ -56,6 +62,7 @@ end
 
 function Player:throwSpell(mouseX, mouseY)
     if not self.isLoading then
+        self:onCast()
         initialX = self.posX  + self.size / 2
         initialY = self.posY  + self.size / 2
 
@@ -109,6 +116,34 @@ function Player:onLoading()
         end
     end
 
+end
+
+function Player:onIdle()
+    if self.isMoving == true then
+        image = ImageManager:new({
+            path = "assets/animations/marlon/marlonventoidle_sheet.png"
+        }):getImage()
+        self.animation = AnimationManager:new({
+        }):newAnimation(image, 32, 32, 1)
+    end
+end
+
+function Player:onMove()
+    if self.isMoving == false then
+        image = ImageManager:new({
+            path = "assets/animations/marlon/marlonventoandando_sheet.png"
+        }):getImage()
+        self.animation = AnimationManager:new({
+        }):newAnimation(image, 32, 32, 1)
+    end
+end
+
+function Player:onCast()
+    image = ImageManager:new({
+        path = "assets/animations/marlon/marlonventocastando_sheet.png"
+    }):getImage()
+    self.animation = AnimationManager:new({
+    }):newAnimation(image, 32, 32, 1)
 end
 
 return Player
