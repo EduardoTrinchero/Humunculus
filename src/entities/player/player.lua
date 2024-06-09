@@ -2,7 +2,6 @@ local ImageManager = require "src.managers.image_manager.imageManager"
 local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Entity = require "src.entities.entity.entity"
-local Dispatcher = require "utils.Dispatcher"
 
 Player = Entity:new({})
     
@@ -78,7 +77,7 @@ function Player:throwSpell(mouseX, mouseY)
             hurtbox = 50,
             angle = math.atan2(mouseY-self.posY,mouseX-self.posX),
             size = 2,
-            damage = 10,
+            damage = 20,
 
             currentX = self.posX,
             currentY = self.posY,
@@ -134,7 +133,7 @@ function Player:onMove()
             path = "assets/animations/marlon/marlonventoandando_sheet.png"
         }):getImage()
         self.animation = AnimationManager:new({
-        }):newAnimation(image, 32, 32, 1)
+        }):newAnimation(image, 32, 32, 0.5)
     end
 end
 
@@ -143,7 +142,7 @@ function Player:onCast()
         path = "assets/animations/marlon/marlonventocastando_sheet.png"
     }):getImage()
     self.animation = AnimationManager:new({
-    }):newAnimation(image, 32, 32, 1)
+    }):newAnimation(image, 32, 32, self.attackRatio)
 end
 
 return Player

@@ -15,7 +15,7 @@ function PlayerManager:getPlayer()
             sprite = "assets/animations/marlon/marlonventoidle_sheet.png",
             isAlive = true,
             hitbox = 65,
-    
+            speed = 200,
             posX = 250,
             posY = 250,
             angle = 0,
