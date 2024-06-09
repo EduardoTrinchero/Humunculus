@@ -22,8 +22,8 @@ function love.update( dt )
     mouseX, mouseY = love.mouse.getPosition()
 
     player:checkMoves(dt)
-    player:lookAtCursor(mouseX, mouseY)
     player:onLoading()
+    player:updateAnimation(dt)
 
     if love.mouse.isDown(1) then
         player:throwSpell(mouseX, mouseY)

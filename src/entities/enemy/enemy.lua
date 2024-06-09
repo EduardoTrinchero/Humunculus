@@ -15,11 +15,8 @@ function Enemy:new (obj)
         path = obj.sprite
     }):getImage()
 
-    if obj.animation then
-        obj.animation = AnimationManager:new({
-            image = obj.animation
-        }):newAnimation(32, 32, 1)
-    end
+    obj.animation = AnimationManager:new({
+    }):newAnimation(obj.sprite, 32, 32, 1)
 
     obj.hitbox = Hitbox:new({
         radius = obj.hitbox

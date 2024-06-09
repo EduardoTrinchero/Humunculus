@@ -1,4 +1,5 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
+local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Entity = require "src.entities.entity.entity"
 
@@ -12,6 +13,9 @@ function Player:new (obj)
     obj.sprite = ImageManager:new({
         path = obj.sprite
     }):getImage()
+
+    obj.animation = AnimationManager:new({
+    }):newAnimation(obj.sprite, 32, 32, 1)
 
     obj.hitbox = Hitbox:new({
         radius = obj.hitbox
@@ -65,7 +69,7 @@ function Player:throwSpell(mouseX, mouseY)
             initialX = initialX,
             initialY = initialY,
             hurtbox = 50,
-            angle = 0,
+            angle = math.atan2(mouseY-self.posY,mouseX-self.posX),
             size = 2,
             damage = 10,
 

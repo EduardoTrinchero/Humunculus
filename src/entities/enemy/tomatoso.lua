@@ -33,8 +33,7 @@ function Tomatoso:new ( obj )
     }):getImage()
 
     obj.animation = AnimationManager:new({
-        image = obj.sprite
-    }):newAnimation(32, 32, 1)
+    }):newAnimation(obj.sprite, 32, 32, 1)
 
     obj.hitbox = Hitbox:new({
         radius = obj.hitbox

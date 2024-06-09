@@ -12,7 +12,7 @@ end
 function PlayerManager:getPlayer()
     return  Player:new({
             health = 100,
-            sprite = "assets/images/marlon/sprt_marlon.png",
+            sprite = "assets/animations/marlon/marlonventoidle_sheet.png",
             isAlive = true,
             hitbox = 65,
     
