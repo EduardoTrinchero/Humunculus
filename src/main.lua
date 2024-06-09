@@ -25,12 +25,11 @@ function love.update( dt )
     player:onLoading()
     player:updateAnimation(dt)
     
-    -- if player.isMoving then 
-    --     player:onMove()
-    -- else 
-    --     player:onIdle()
-    -- end
-    player:onMove()
+    if player.isMoving then 
+        player:onMove()
+    else 
+        player:onIdle()
+    end
 
     if love.mouse.isDown(1) then
         player:throwSpell(mouseX, mouseY)

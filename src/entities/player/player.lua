@@ -27,6 +27,21 @@ function Player:new (obj)
 
     obj.isMoving = false
 
+    obj.animations = {
+        idle = AnimationManager:new({
+            }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonventoidle_sheet.png"
+            }):getImage(), 32, 32, 1),
+        move = AnimationManager:new({
+            }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonventoandando_sheet.png"
+            }):getImage(), 32, 32, 0.5),
+        cast = AnimationManager:new({
+            }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonventocastando_sheet.png"
+            }):getImage(), 32, 32, self.attackRatio)
+    }
+
     return obj
 end
 
@@ -36,16 +51,24 @@ function Player:checkMoves(dt)
     if love.keyboard.isDown("a") then
         self.isMoving = true
         moveX = moveX - 1
-    elseif love.keyboard.isDown("d") then
+    end
+    if love.keyboard.isDown("d") then
         self.isMoving = true
         moveX = moveX + 1
-    elseif love.keyboard.isDown("w") then
+    end
+    if love.keyboard.isDown("w") then
         self.isMoving = true
         moveY = moveY - 1
-    elseif love.keyboard.isDown("s") then
+    end
+    if love.keyboard.isDown("s") then
         self.isMoving = true
         moveY = moveY + 1
-    else
+    end
+
+    if not love.keyboard.isDown('a') and 
+       not love.keyboard.isDown('d') and 
+       not love.keyboard.isDown('w') and 
+       not love.keyboard.isDown('s') then 
         self.isMoving = false
     end
 
@@ -118,31 +141,15 @@ function Player:onLoading()
 end
 
 function Player:onIdle()
-    if self.isMoving == true then
-        image = ImageManager:new({
-            path = "assets/animations/marlon/marlonventoidle_sheet.png"
-        }):getImage()
-        self.animation = AnimationManager:new({
-        }):newAnimation(image, 32, 32, 1)
-    end
+   self.animation = self.animations['idle']
 end
 
 function Player:onMove()
-    if self.isMoving == false then
-        image = ImageManager:new({
-            path = "assets/animations/marlon/marlonventoandando_sheet.png"
-        }):getImage()
-        self.animation = AnimationManager:new({
-        }):newAnimation(image, 32, 32, 0.5)
-    end
+    self.animation = self.animations['move']
 end
 
 function Player:onCast()
-    image = ImageManager:new({
-        path = "assets/animations/marlon/marlonventocastando_sheet.png"
-    }):getImage()
-    self.animation = AnimationManager:new({
-    }):newAnimation(image, 32, 32, self.attackRatio)
+    self.animation = self.animations['cast']
 end
 
 return Player
