@@ -1,5 +1,5 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
-local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
+local AnimationManager = require "src.managers.animation_manager.animationManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Entity = require "src.entities.entity.entity"
 
@@ -175,10 +175,8 @@ end
 function Player:checkSideAnimation(mouseX, mouseY)
 
     if mouseX < self.posX then
-        print("The mouse is on the left side of the circle")
         return 'l'
     else
-        print("The mouse is on the right side of the circle")
         return 'r'
     end
 end

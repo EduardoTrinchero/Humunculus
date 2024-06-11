@@ -1,5 +1,5 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
-local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
+local AnimationManager = require "src.managers.animation_manager.animationManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Hurtbox = require "src.entities.hurtbox.hurtbox" 
 local Entity = require "src.entities.entity.entity"
