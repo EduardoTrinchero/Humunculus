@@ -94,45 +94,51 @@ function Player:update(dt)
     end
 end
 
+function Player:onDeath()
+    print("Voce morreu :(")
+end
+
 function Player:checkMoves(dt)
     local moveX, moveY = 0, 0
 
-    if love.keyboard.isDown("a") then
-        self.isMoving = true
-        moveX = moveX - 1
-    end
-    if love.keyboard.isDown("d") then
-        self.isMoving = true
-        moveX = moveX + 1
-    end
-    if love.keyboard.isDown("w") then
-        self.isMoving = true
-        moveY = moveY - 1
-    end
-    if love.keyboard.isDown("s") then
-        self.isMoving = true
-        moveY = moveY + 1
-    end
+    if self.isAlive then
+        if love.keyboard.isDown("a") then
+            self.isMoving = true
+            moveX = moveX - 1
+        end
+        if love.keyboard.isDown("d") then
+            self.isMoving = true
+            moveX = moveX + 1
+        end
+        if love.keyboard.isDown("w") then
+            self.isMoving = true
+            moveY = moveY - 1
+        end
+        if love.keyboard.isDown("s") then
+            self.isMoving = true
+            moveY = moveY + 1
+        end
 
-    if not love.keyboard.isDown('a') and 
-       not love.keyboard.isDown('d') and 
-       not love.keyboard.isDown('w') and 
-       not love.keyboard.isDown('s') then 
-        self.isMoving = false
-    end
+        if not love.keyboard.isDown('a') and 
+        not love.keyboard.isDown('d') and 
+        not love.keyboard.isDown('w') and 
+        not love.keyboard.isDown('s') then 
+            self.isMoving = false
+        end
 
-    local length = math.sqrt(moveX^2 + moveY^2)
-    if length > 0 then
-        moveX = moveX / length
-        moveY = moveY / length
-    end
+        local length = math.sqrt(moveX^2 + moveY^2)
+        if length > 0 then
+            moveX = moveX / length
+            moveY = moveY / length
+        end
 
-    self.posX = self.posX + moveX * self.speed * dt
-    self.posY = self.posY + moveY * self.speed * dt
+        self.posX = self.posX + moveX * self.speed * dt
+        self.posY = self.posY + moveY * self.speed * dt
+    end
 end
 
 function Player:throwSpell(mouseX, mouseY)
-    if not self.isLoading then
+    if not self.isLoading and self.isAlive then
         self:onCast(1)
         initialX = self.posX  + self.size / 2
         initialY = self.posY  + self.size / 2

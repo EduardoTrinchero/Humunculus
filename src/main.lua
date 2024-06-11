@@ -38,9 +38,13 @@ function love.draw()
 
     player:draw()
     -- player:onDebug()
-
+    print(string.format('health %s', player.health))
     for i, enemy in ipairs(enemies) do
         enemy:draw()
+
+        if player.hitbox:hit(player.posX, player.posY, enemy.posX, enemy.posY) and player.isAlive then 
+            player:onHit(1)
+        end
         -- enemy:onDebug()
     end
 
