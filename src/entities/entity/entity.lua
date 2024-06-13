@@ -34,6 +34,7 @@ function Entity:load()
             radius = self.hitbox
         })
     end
+    self.entityStates = {}
 end
 
 function Entity:draw()
@@ -69,6 +70,10 @@ function Entity:kill()
     self:onDeath()
 end
 
+function Entity:onDeath()
+    print("Voce morreu :(")
+end
+
 function Entity:onDebug()
     love.graphics.circle("line", self.posX, self.posY, 10)
     love.graphics.circle("line", self.posX, self.posY, 40)
@@ -81,11 +86,33 @@ function Entity:updateAnimation(dt)
     end
 end
 
+function Entity:checkSideAnimation(mouseX, mouseY)
+    if mouseX < self.posX then
+        return 'l'
+    else
+        return 'r'
+    end
+end
+
 function Entity:setState(state)
     if self.state ~= state then
         self.state = state
         self.animation = self.animations[state]
     end
+end
+
+function Entity:onIdle()
+    self:setState(self.entityStates.IDLE)
+end
+
+function Entity:onMove()
+    self:setState(self.entityStates.MOVE)
+end
+
+function Entity:onCast(duration)
+    self.isCasting = true
+    self.castTimer = duration
+    self:setState(self.entityStates.CAST)
 end
 
 return Entity

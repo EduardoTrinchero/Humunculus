@@ -5,12 +5,7 @@ local Entity = require "src.entities.entity.entity"
 
 Player = Entity:new({})
 
-PlayerStates = {
-    IDLE = "idle_",
-    MOVE = 'move_',
-    CAST = "cast_",
-}
-    
+  
 function Player:new (obj)
     obj = obj or {}
     setmetatable(obj, self)
@@ -31,7 +26,11 @@ function Player:load()
     self.bulletRange = Hitbox:new({
         radius = self.bulletRange
     })
-
+    self.entityStates = {
+        IDLE = "idle_",
+        MOVE = 'move_',
+        CAST = "cast_"
+    }
     self.animations = {
         idle_r = AnimationManager:new({
             }):newAnimation(ImageManager:new({
@@ -63,8 +62,7 @@ function Player:load()
     }
 
     self.animation = self.animations['idle_r']
-    self.isMovingR = false
-    self.isMovingL = false
+
     self.isCasting = false
     self.castTimer = 0
 end
@@ -86,16 +84,12 @@ function Player:update(dt)
     end
 
     if self.isCasting then
-        self:setState(PlayerStates.CAST .. self:checkSideAnimation(mouseX, mouseY))
+        self:setState(self.entityStates.CAST .. self:checkSideAnimation(mouseX, mouseY))
     elseif self.isMoving then
-        self:setState(PlayerStates.MOVE .. self:checkSideAnimation(mouseX, mouseY))
+        self:setState(self.entityStates.MOVE .. self:checkSideAnimation(mouseX, mouseY))
     else
-        self:setState(PlayerStates.IDLE .. self:checkSideAnimation(mouseX, mouseY))
+        self:setState(self.entityStates.IDLE .. self:checkSideAnimation(mouseX, mouseY))
     end
-end
-
-function Player:onDeath()
-    print("Voce morreu :(")
 end
 
 function Player:checkMoves(dt)
@@ -149,7 +143,7 @@ function Player:throwSpell(mouseX, mouseY)
         directionY = 450 * math.sin(angle)
 
         bullet = Bullet:new({
-            sprite = 'assets/images/bullet/sprt_magia.png',
+            sprite = 'assets/images/bullet/marlonventobala.png',
             initialX = initialX,
             initialY = initialY,
             hurtbox = 50,
@@ -178,15 +172,6 @@ function Player:lookAtCursor(mouseX, mouseY)
     self.angle = angle
 end
 
-function Player:checkSideAnimation(mouseX, mouseY)
-
-    if mouseX < self.posX then
-        return 'l'
-    else
-        return 'r'
-    end
-end
-
 function Player:onLoading()
 
     if player.isLoading then 
@@ -201,21 +186,6 @@ function Player:onLoading()
             end
         end
     end
-
-end
-
-function Player:onIdle()
-    self:setState(PlayerStates.IDLE)
-end
-
-function Player:onMove()
-    self:setState(PlayerStates.MOVE)
-end
-
-function Player:onCast(duration)
-    self.isCasting = true
-    self.castTimer = duration
-    self:setState(PlayerStates.CAST)
 end
 
 return Player

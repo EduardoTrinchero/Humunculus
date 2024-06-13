@@ -10,7 +10,10 @@ function Enemy:new (obj)
     obj = obj or {}
     setmetatable(obj, self)
     self.__index = self
+    return obj
+end
 
+function Enemy:load() 
     obj.sprite = ImageManager:new({
         path = obj.sprite
     }):getImage()
@@ -26,7 +29,7 @@ function Enemy:new (obj)
         radius = obj.hurtbox
     })
 
-    return obj
+    self.animations = {}
 end
 
 function Enemy:onDeath()
@@ -90,5 +93,6 @@ function Enemy:goForPlayerNormalized(dt, player)
     self.posY = self.posY + moveY * self.speed * dt
 
 end
+
 
 return Enemy

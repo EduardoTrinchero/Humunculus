@@ -43,6 +43,19 @@ function Tomatoso:new ( obj )
         radius = obj.hurtbox
     })
 
+    self.animations = {
+        moving = AnimationManager:new({
+            }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonventoidle_sheet.png"
+        }):getImage(), 32, 32, 1),
+        dead = AnimationManager:new({
+            }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonventoidle_sheet.png"
+        }):getImage(), 32, 32, 1), 
+    }
+
+    self.animation = self.animations['idle']
+
     return obj
 end
 
