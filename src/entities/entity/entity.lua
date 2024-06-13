@@ -2,7 +2,7 @@ Entity = {
     health = 100,
     sprite = nil,
     isAlive = true,
-    hitbox = nil,
+    hitbox = 65,
     hurtbox = nil,
     posX = 0,
     posY = 0,
@@ -10,8 +10,10 @@ Entity = {
     size = 1,
     originOffsetX = 19,
     originOffsetY = 19,
+    attackRatio = 1,
     speed = 100,
-    bulletsStorage = {}
+    bulletsStorage = {},
+    show = true
 }
 Entity.__index = Entity
 
@@ -35,10 +37,10 @@ function Entity:load()
         })
     end
     self.entityStates = {}
+    self.deathAnimationTimer = 1
 end
 
 function Entity:draw()
-    
     if self.animation then 
         local spriteNum = math.floor(self.animation.currentTime / self.animation.duration * #self.animation.quads) + 1
         love.graphics.draw(
@@ -56,6 +58,7 @@ function Entity:draw()
             self.originOffsetX, self.originOffsetY
         )
     end
+
 end
 
 function Entity:onHit(hitDamage)
@@ -71,7 +74,9 @@ function Entity:kill()
 end
 
 function Entity:onDeath()
-    print("Voce morreu :(")
+    if not self.isAlive then
+        self.animation = self.animations['dead'] 
+    end
 end
 
 function Entity:onDebug()

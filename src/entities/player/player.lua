@@ -29,7 +29,9 @@ function Player:load()
     self.entityStates = {
         IDLE = "idle_",
         MOVE = 'move_',
-        CAST = "cast_"
+        CAST = "cast_",
+        DEAD = 'dead',
+        DEBASE = 'debase'
     }
     self.animations = {
         idle_r = AnimationManager:new({
@@ -59,12 +61,22 @@ function Player:load()
         }):newAnimation(ImageManager:new({
                 path = "assets/animations/marlon/marlonventocastandoreverso_sheet.png"
         }):getImage(), 32, 32, self.attackRatio),
+
+        dead = AnimationManager:new({
+        }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonmorto.png"
+        }):getImage(), 32, 32, self.attackRatio),
+        debase = AnimationManager:new({
+        }):newAnimation(ImageManager:new({
+                path = "assets/animations/marlon/marlonmorto1.png"
+        }):getImage(), 32, 32, self.attackRatio),
     }
 
     self.animation = self.animations['idle_r']
 
     self.isCasting = false
     self.castTimer = 0
+    self.deathAnimationTimer = 1
 end
 
 function Player:update(dt)
@@ -83,13 +95,26 @@ function Player:update(dt)
         end
     end
 
+    if not self.isAlive and not self.debase then
+        self.deathAnimationTimer = self.deathAnimationTimer - dt
+        if self.deathAnimationTimer <= 0 then
+            self.deathAnimationTimer = false
+            self.debase = true
+        end
+    end
+
     if self.isCasting then
         self:setState(self.entityStates.CAST .. self:checkSideAnimation(mouseX, mouseY))
+    elseif not self.isAlive and not self.debase then    
+        self:setState(self.entityStates.DEAD)
     elseif self.isMoving then
         self:setState(self.entityStates.MOVE .. self:checkSideAnimation(mouseX, mouseY))
+    elseif self.debase then
+        self:setState(self.entityStates.DEBASE)
     else
         self:setState(self.entityStates.IDLE .. self:checkSideAnimation(mouseX, mouseY))
     end
+
 end
 
 function Player:checkMoves(dt)
@@ -133,7 +158,7 @@ end
 
 function Player:throwSpell(mouseX, mouseY)
     if not self.isLoading and self.isAlive then
-        self:onCast(1)
+        -- self:onCast(1)
         initialX = self.posX  + self.size / 2
         initialY = self.posY  + self.size / 2
 
@@ -149,7 +174,7 @@ function Player:throwSpell(mouseX, mouseY)
             hurtbox = 50,
             angle = math.atan2(mouseY-self.posY,mouseX-self.posX),
             size = 2,
-            damage = 20,
+            damage = 100,
 
             currentX = self.posX,
             currentY = self.posY,

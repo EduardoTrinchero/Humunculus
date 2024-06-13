@@ -20,16 +20,18 @@ end
 
 function love.update( dt )
     mouseX, mouseY = love.mouse.getPosition()
-
     player:update(dt)
 
     for i, enemy in ipairs(enemies) do
-        enemy:goForPlayer(dt, player)
-        enemy:updateAnimation(dt)
+        enemy:update(dt, player, enemies, i)
 
         if player.bulletsStorage then
             Bullet:dispatch(dt, player.bulletsStorage, enemy)
         end
+    end
+
+    if #enemies == 0 then
+        Bullet:dispatch(dt, player.bulletsStorage, enemy)
     end
 end
 
@@ -37,15 +39,12 @@ function love.draw()
     background:draw()
 
     player:draw()
-    -- player:onDebug()
-    print(string.format('health %s', player.health))
     for i, enemy in ipairs(enemies) do
         enemy:draw()
 
         if player.hitbox:hit(player.posX, player.posY, enemy.posX, enemy.posY) and player.isAlive then 
             player:onHit(1)
         end
-        -- enemy:onDebug()
     end
 
     if player.bulletsStorage then

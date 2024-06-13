@@ -46,26 +46,20 @@ function Tomatoso:new ( obj )
     self.animations = {
         moving = AnimationManager:new({
             }):newAnimation(ImageManager:new({
-                path = "assets/animations/marlon/marlonventoidle_sheet.png"
+                path = "assets/animations/tomatoso/tomatoso.png"
         }):getImage(), 32, 32, 1),
         dead = AnimationManager:new({
             }):newAnimation(ImageManager:new({
-                path = "assets/animations/marlon/marlonventoidle_sheet.png"
-        }):getImage(), 32, 32, 1), 
+                path = "assets/animations/tomatoso/tomatosomorto.png"
+        }):getImage(), 32, 32, 1),
+        f = AnimationManager:new({
+        }):newAnimation(ImageManager:new({
+            path = "assets/animations/tomatoso/tomatosomorto1.png"
+    }):getImage(), 32, 32, 1),
     }
 
-    self.animation = self.animations['idle']
-
+    self.animation = self.animations['moving']
     return obj
 end
-
-function Tomatoso:onDeath()
-    if not self.isAlive then
-        self.sprite = ImageManager:new({
-            path = "assets/images/zomblizard/sprt_zomblizard_morto.png",
-        }):getImage()
-    end
-end
-
 
 return Tomatoso

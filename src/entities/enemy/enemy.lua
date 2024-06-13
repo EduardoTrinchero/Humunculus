@@ -30,13 +30,19 @@ function Enemy:load()
     })
 
     self.animations = {}
+    self.deathAnimationTimer = 0
 end
 
-function Enemy:onDeath()
+function Enemy:update(dt, player, enemies, enemyIndex)
+    self:goForPlayer(dt, player)
+    self:updateAnimation(dt)
+
     if not self.isAlive then
-        self.sprite = ImageManager:new({
-            path = "assets/images/zomblizard/pigtauro_morto.png",
-        }):getImage()
+        self.deathAnimationTimer = self.deathAnimationTimer - dt
+        if self.deathAnimationTimer <= 0 then
+            self.deathAnimationTimer = false
+            table.remove(enemies, enemyIndex)
+        end
     end
 end
 
