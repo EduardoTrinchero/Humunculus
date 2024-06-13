@@ -1,5 +1,5 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
-local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
+local AnimationManager = require "src.managers.animation_manager.animationManager"  
 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Hurtbox = require "src.entities.hurtbox.hurtbox" 
@@ -43,16 +43,23 @@ function Tomatoso:new ( obj )
         radius = obj.hurtbox
     })
 
+    self.animations = {
+        moving = AnimationManager:new({
+            }):newAnimation(ImageManager:new({
+                path = "assets/animations/tomatoso/tomatoso.png"
+        }):getImage(), 32, 32, 1),
+        dead = AnimationManager:new({
+            }):newAnimation(ImageManager:new({
+                path = "assets/animations/tomatoso/tomatosomorto.png"
+        }):getImage(), 32, 32, 1),
+        f = AnimationManager:new({
+        }):newAnimation(ImageManager:new({
+            path = "assets/animations/tomatoso/tomatosomorto1.png"
+    }):getImage(), 32, 32, 1),
+    }
+
+    self.animation = self.animations['moving']
     return obj
 end
-
-function Tomatoso:onDeath()
-    if not self.isAlive then
-        self.sprite = ImageManager:new({
-            path = "assets/images/zomblizard/sprt_zomblizard_morto.png",
-        }):getImage()
-    end
-end
-
 
 return Tomatoso

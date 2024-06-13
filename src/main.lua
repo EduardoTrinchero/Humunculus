@@ -20,28 +20,18 @@ end
 
 function love.update( dt )
     mouseX, mouseY = love.mouse.getPosition()
-
-    player:checkMoves(dt)
-    player:onLoading()
-    player:updateAnimation(dt)
-    
-    if player.isMoving then 
-        player:onMove()
-    else 
-        player:onIdle()
-    end
-
-    if love.mouse.isDown(1) then
-        player:throwSpell(mouseX, mouseY)
-    end
+    player:update(dt)
 
     for i, enemy in ipairs(enemies) do
-        enemy:goForPlayer(dt, player)
-        enemy:updateAnimation(dt)
+        enemy:update(dt, player, enemies, i)
 
         if player.bulletsStorage then
             Bullet:dispatch(dt, player.bulletsStorage, enemy)
         end
+    end
+
+    if #enemies == 0 then
+        Bullet:dispatch(dt, player.bulletsStorage, enemy)
     end
 end
 
@@ -49,11 +39,12 @@ function love.draw()
     background:draw()
 
     player:draw()
-    -- player:onDebug()
-
     for i, enemy in ipairs(enemies) do
         enemy:draw()
-        -- enemy:onDebug()
+
+        if player.hitbox:hit(player.posX, player.posY, enemy.posX, enemy.posY) and player.isAlive then 
+            player:onHit(1)
+        end
     end
 
     if player.bulletsStorage then

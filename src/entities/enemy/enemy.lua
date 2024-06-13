@@ -1,5 +1,5 @@
 local ImageManager = require "src.managers.image_manager.imageManager" 
-local AnimationManager = require "src.managers.animation_manager.AnimationManager" 
+local AnimationManager = require "src.managers.animation_manager.animationManager" 
 local Hitbox = require "src.entities.hitbox.hitbox"
 local Hurtbox = require "src.entities.hurtbox.hurtbox" 
 local Entity = require "src.entities.entity.entity"
@@ -10,7 +10,10 @@ function Enemy:new (obj)
     obj = obj or {}
     setmetatable(obj, self)
     self.__index = self
+    return obj
+end
 
+function Enemy:load() 
     obj.sprite = ImageManager:new({
         path = obj.sprite
     }):getImage()
@@ -26,14 +29,20 @@ function Enemy:new (obj)
         radius = obj.hurtbox
     })
 
-    return obj
+    self.animations = {}
+    self.deathAnimationTimer = 0
 end
 
-function Enemy:onDeath()
+function Enemy:update(dt, player, enemies, enemyIndex)
+    self:goForPlayer(dt, player)
+    self:updateAnimation(dt)
+
     if not self.isAlive then
-        self.sprite = ImageManager:new({
-            path = "assets/images/zomblizard/pigtauro_morto.png",
-        }):getImage()
+        self.deathAnimationTimer = self.deathAnimationTimer - dt
+        if self.deathAnimationTimer <= 0 then
+            self.deathAnimationTimer = false
+            table.remove(enemies, enemyIndex)
+        end
     end
 end
 
@@ -90,5 +99,6 @@ function Enemy:goForPlayerNormalized(dt, player)
     self.posY = self.posY + moveY * self.speed * dt
 
 end
+
 
 return Enemy

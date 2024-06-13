@@ -25,9 +25,11 @@ function Bullet:dispatch(dt, bulletsStorage, target)
         bullet.currentX = bullet.currentX + (bullet.directionX * dt)
         bullet.currentY = bullet.currentY + (bullet.directionY * dt)
 
-        if target.hitbox:hit(target.posX, target.posY, bullet.currentX, bullet.currentY) and target.isAlive then 
-            target:onHit(bullet.damage)
-            table.remove(bulletsStorage, i)
+        if target then
+            if target.hitbox:hit(target.posX, target.posY, bullet.currentX, bullet.currentY) and target.isAlive then 
+                target:onHit(bullet.damage)
+                table.remove(bulletsStorage, i)
+            end
         end
     end
 end
