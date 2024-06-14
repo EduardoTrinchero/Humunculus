@@ -158,7 +158,7 @@ end
 
 function Player:throwSpell(mouseX, mouseY)
     if not self.isLoading and self.isAlive then
-        -- self:onCast(1)
+        self:onCast(1)
         initialX = self.posX  + self.size / 2
         initialY = self.posY  + self.size / 2
 

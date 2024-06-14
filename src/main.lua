@@ -24,14 +24,10 @@ function love.update( dt )
 
     for i, enemy in ipairs(enemies) do
         enemy:update(dt, player, enemies, i)
-
-        if player.bulletsStorage then
-            Bullet:dispatch(dt, player.bulletsStorage, enemy)
-        end
     end
 
-    if #enemies == 0 then
-        Bullet:dispatch(dt, player.bulletsStorage, enemy)
+    for i, bullet in ipairs(player.bulletsStorage) do
+        bullet:update(dt, player.bulletsStorage, enemies)
     end
 end
 
